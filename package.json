@@ -1,6 +1,6 @@
 {
   "name": "LiteClass",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.",
   "main": "dist/class.js",
   "private": true,
