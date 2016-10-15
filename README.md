@@ -8,7 +8,7 @@ Small JS module that aims to facilitate object-oriented programming (OOP) in Jav
 
 Therefore, to use it on a client side web page, download a copy and reference it with a script tag, such as:
 	
-	<script type="text/javascript" src="[path]/LiteClass/index.js"></script>
+	<script type="text/javascript" src="[path]/LiteClass/dist/class.js"></script>
 
 where `[path]` is the path to the **LiteClass** folder on the local file system.
 
