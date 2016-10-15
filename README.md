@@ -1,6 +1,5 @@
 LiteClass
 ==
-<!--[![Build Status](https://github.com/luciVuc/LiteClass.git?branch=master)](https://github.com/luciVuc/LiteClass)-->
 
 Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.
 
@@ -9,20 +8,20 @@ Small JS module that aims to facilitate object-oriented programming (OOP) in Jav
 
 Therefore, to use it on a client side web page, download a copy and reference it with a script tag, such as:
 	
-	```<script type="text/javascript" src="[path]/LiteClass/index.js"></script>```
+	<script type="text/javascript" src="[path]/LiteClass/index.js"></script>
 
-where ```[path]``` is the path to the **LiteClass** folder on the local file system.
+where `[path]` is the path to the **LiteClass** folder on the local file system.
 
 For the server-side (i.e. Node.js) environment, first install it with `NPM`,
 
-	```npm install LiteClass```
+	npm install LiteClass
 
-then load it with the ```require``` function
+then load it with the `require` function
 
-	```var LiteClass = require('LiteClass');```
+	var LiteClass = require('LiteClass');
 
 ###Version:
-`1.0.0`
+`1.0.1`
 
 ###Description
 From the user's perspective **LiteClass** is a simple JS constructor (function) enhanced with support for some basic OOP features, such as inheritance and data abstraction, as well as member definition (methods, static properties, instance data fields, etc.), built-in data field access control (through a generic API of *getters* and *setters*), and event triggering/handeling mechanism.
@@ -43,8 +42,6 @@ The succesful execution of this function will create and return a new class (con
 #####The ***class descriptor*** parameter
 The *static* function `extend` does not have any required parameters. However, it supports a paramenter of type `object`, the `mOptions` or ***class descriptor*** parameter, which can contain the class definition options in a key-value pair (KVP) format. In other words, any additional functionality and/or data fields for the new class, could be passed to the *static* function `extend` inside this ***class descriptor*** argument.
 Here is an example:
-
-```js
 
 	// create the new class with a **class descriptor** parameter
 	var MyClass = LiteClass.extend({
@@ -93,8 +90,6 @@ Here is an example:
 		}
 	});
 
-```
-
 Although the options (properties) of the ***class descriptor*** parameter are optional, it does have two default options (`"@static"` and the `"@private"`) with predefined roles.
 
 #####The `"@static"` property
@@ -109,12 +104,10 @@ A ***data field*** of the class, on the other hand, is a data element that defin
 
 Moreover, because a ***data field*** could either be a **property** (a type of ***data field*** that can store a single-value data), or an **aggregation** (a type of ***data field*** that can store a collection or reference multiple values of similar data type), the ***data field descriptors*** inside the `"@private"` option of the ***class descriptor*** parameter are split into:
 
-	- `properties` - an object literal that holds the ***property descriptors*** (the ***data field descriptors*** for the *properties* of the class), and
-	- `aggregations` - an object literal that holds the ***aggregation descriptors*** (the ***data field descriptors*** for the *aggregations* of the class).
+- `properties` - an object literal that holds the ***property descriptors*** (the ***data field descriptors*** for the *properties* of the class), and
+- `aggregations` - an object literal that holds the ***aggregation descriptors*** (the ***data field descriptors*** for the *aggregations* of the class).
 
 Below is the basic structure of the `"@private"` option and its ***data field descriptor*** groups:
-
-```js
 
 	// ....
 	// data fields descriptor
@@ -135,7 +128,6 @@ Below is the basic structure of the `"@private"` option and its ***data field de
 	  	}
 	  }
 	}
-```
 
 The `<<name>>` placeholder, in the code snippet above, represents the name of the **data field** that particular ***data field descriptor*** describes, and its value is the object literal containing the set of applicabile *options* for defining it as a data field of the class.
 
@@ -151,7 +143,6 @@ All the other options (properties) of the ***class descriptor*** argument, inclu
 #####Example
 Here is an example of a simple class definition:
 
-```js
 		var Car = LiteClass.extend({
 			// define the data fields
 		  "@private": {
@@ -204,13 +195,11 @@ Here is an example of a simple class definition:
 		  	return this;
 		  }
 		});
-```
 
 ###Instantiation
 ####Creating instances of ***LiteClass*** type
 To instantiate the `LiteClass` or one of its sub-classes we invoke constructor with the `new` keyword, as in the following example:
 
-```js
 		var car = new Car();
 		
 		// print the car info on the console
@@ -233,27 +222,21 @@ To instantiate the `LiteClass` or one of its sub-classes we invoke constructor w
 		//	"color"	:	"",
 		//	"mileage"	:	0,
 		//	"price"	:	0
-```
 
 After the execution of the statement above the variable `car` will reference an instance of type `LiteClass`. This is an example of object instantiated with the default values provided in ***class descriptor*** `"@private"` property.
 
 #####Type checking support
 Because the `LiteClass` instances are created using the `new` keyword, it is possible to check the type of an instance using the JS `instanceof` operator. Therefore, all the following statements are valid:
 
-```js
 		obj instanceof Car; // true
 		obj instanceof LiteClass; // true
 
 		var Plane = LiteClass.extend();
 		obj instanceof Plane; // false
-```
-
 
 #####The `mSettings` argument
 To instantiate a ***LiteClass*** type with user-defined values for its data fields, the default constructor supports an optional parameter, `mSettings`. This parameter is an object literal that passes to the constructor instantiation values for the predefined ***data fields*** of the class. In other words, each key of the `mSettings` object should match the name of a data field (*property* or *aggregation*) defined in the `"@private"` option of the ***class descriptor*** parameter. Any key in `mSettings` object that does not match the name of a ***data field*** will be ignored. Moreover, the value of each key in the `mSettings` parameter should be valid for its corresponding data field of the class, otherwise it will be rejected during validation and its default value used instead.
 
-```js
-		
 		var car = new Car({
 			make: "Ford",
             model: "Fusion",
@@ -282,7 +265,6 @@ To instantiate a ***LiteClass*** type with user-defined values for its data fiel
 		//	"color"	:	"Titanium",
 		//	"mileage"	:	10000,
 		//	"price"	:	23000.99
-```
 
 ####Data Field Access Control
 
@@ -346,8 +328,6 @@ As mentioned above, triggering `change` events is the default behaviour of the *
 The following section shows a very simple demo app that resembles a basic *ToDo List* and uses the ***LiteClass*** as the super-class of its classes. It is meant to show how to define JS classes with ***LiteClass*** and how to instantiate them.
 The first class, `View`, is a direct sub-class of the ***LiteClass*** . The role of this class is the render its internal state in HTML format.
 The next two classes model the *ToDo* list and item objects, although, for the sake of simplicity they will also implement basic UI rendering capabilities (by sub-classing of `View` class), so that they will be able to render their internal state in HTML format. One of these classes is `ListItem`, which resembles a very simple *to do* item, and the other one is `List`, which is a collection of items (`ListItem` instances), resembling the simple *to do* list.
-
-```js;
 
 		var Class = window.LiteClass; // or `require("LiteClass")` if it is available;
 
@@ -775,9 +755,9 @@ The next two classes model the *ToDo* list and item objects, although, for the s
 
 						// 9. Add a item to the aggreagtion "items" of the list
 						app.view.list.addAggregation("items", new app.class.ListItem({
-							id: 1476085826535,
-							title: "Next step",
-							body: "Have fun :)"    
+							id: Number(new Date()),
+							title: "Final step",
+							body: "Have fun"    
 						}));
 
 					}
@@ -791,6 +771,5 @@ The next two classes model the *ToDo* list and item objects, although, for the s
 			app.controller = new app.class.Controller();
 		});
 
-```
 
-[![Here](https://run.plnkr.co/plunks/myrCHET3RYyNrAw8BV9f/)] is also a live version of this demo app.
+[Here](https://run.plnkr.co/plunks/myrCHET3RYyNrAw8BV9f/) is also a live version of this demo app.
