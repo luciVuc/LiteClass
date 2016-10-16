@@ -1,47 +1,47 @@
-LiteClass
+## LiteClass
 ==
 
-Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.
+A small JS module which intends to facilitate object-oriented development in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.
 
-###Installation Guide
-**LiteClass** is designed to work both client-side (on the browser) and server-side (such as the Node.js environment).
+### Installation Guide
+This module is designed to work both in a client-side (i.e. browser) and a server-side (i.e. Node.js) environment.
 
-Therefore, to use it on a client side web page, download a copy and reference it with a script tag, such as:
+To use it on a client side web page, we need to reference it with a script tag, such as
 	
 	<script type="text/javascript" src="[path]/LiteClass/dist/class.js"></script>
 
 where `[path]` is the path to the **LiteClass** folder on the local file system.
 
-For the server-side (i.e. Node.js) environment, first install it with `NPM`,
+For the server-side (i.e. Node.js) environment, first we need to install it with `NPM`,
 
 	npm install LiteClass
 
-then load it with the `require` function
+and then to load it with the `require` function
 
 	var LiteClass = require('LiteClass');
 
-###Version:
+
+### Version:
 `1.0.1`
 
-###Description
-From the user's perspective **LiteClass** is a simple JS constructor (function) enhanced with support for some basic OOP features, such as inheritance and data abstraction, as well as member definition (methods, static properties, instance data fields, etc.), built-in data field access control (through a generic API of *getters* and *setters*), and event triggering/handeling mechanism.
-The role of this constructor is to serve as the *super-class* of all JS classes (constructors) in a project, so that all the instances of itself and the instances of its *sub-classes* inherit and share the same basic set of OOP features and capabilities.
+### Description
+From the user's perspective **LiteClass** is a simple JS constructor function enhanced with support for some basic OOP features, such as inheritance, data abstraction, member definition (i.e. methods, static properties, instance data fields, etc.) and data field access control (a predefined generic API of *getters* and *setters*), as well as built-in event triggering and handeling mechanism.
+The role of this constructor is to serve as the *super-class* of all JS classes (constructor functions) in a project, so that all the instances of itself and the instances of its *sub-classes* inherit and share the same basic set of OOP features and capabilities.
 
 
-###Inheritance
-Due to inheritance, this *super-class* constructor has the ability of creating other JS constructors (functions) similar to itself. Thus, to support this functionality it implements a *static* function, called `extend`. The role of this function is to *extend* the class that *owns* it through the standard prototypal inheritance process in JS. Therefore, each new class or *sub-class* of the **LiteClass** *super-class* will *own* a version of the *static* function `extend`.
+### Inheritance
+Through its support for inheritance this *super-class* constructor function has the ability to create other JS constructor functions similar to itself. For this reason each **LiteClass** constructor, *super-class* or *sub-class*, will *own* a version of a *static* function called `extend`. The role of this function is to create and return new class constructors by creating new functions and to have them inherit, through the standard JS prototypal inheritance process, all the properties and features of the class constructor that *owns* it.
 
 
-####Creating new classes
+#### Creating new classes
 To create a new class we need to invoke the *static* function `extend` of the super-class (the class to extend), as in the following example:
 
 	var MyClass = LiteClass.extend();
     
-The succesful execution of this function will create and return a new class (constructor/function), which will be referenced by the `MyClass` variable. This class will be identical with its superclass (**LiteClass**, in this case), meaning that it will containing no additional data fields or functionality.
+The succesful execution of this function will create and return a new class (constructor function), which will be referenced by the `MyClass` variable. This class will be identical with its superclass (the **LiteClass** constructor, in this case) in the sense that it will contain no additional data fields or functionality.
 
-#####The ***class descriptor*** parameter
-The *static* function `extend` does not have any required parameters. However, it supports a paramenter of type `object`, the `mOptions` or ***class descriptor*** parameter, which can contain the class definition options in a key-value pair (KVP) format. In other words, any additional functionality and/or data fields for the new class, could be passed to the *static* function `extend` inside this ***class descriptor*** argument.
-Here is an example:
+##### The ***class descriptor*** parameter
+The example above shows that the *static* function `extend` does not have any required parameters. However, it does support a paramenter of type `object`, which is the ***class descriptor*** or `mOptions` parameter. The role of this paramenter is to contain, and pass to the `extend` function call, the class definition options in a key-value pair (KVP) format. As shown in the following example, these class definiton options may include additional functionality and/or data fields specific to the new class.
 
 	// create the new class with a **class descriptor** parameter
 	var MyClass = LiteClass.extend({
@@ -90,24 +90,25 @@ Here is an example:
 		}
 	});
 
-Although the options (properties) of the ***class descriptor*** parameter are optional, it does have two default options (`"@static"` and the `"@private"`) with predefined roles.
+Although the ***class descriptor*** parameter does not have any required options or properties, it does have two default options (the `"@static"` and the `"@private"` properties) with predefined roles.
 
-#####The `"@static"` property
-The role of the `"@static"` option is to specify, also in a KVP manner, the *static* members of the class. These members (functions, constant values, etc.), similar to the `extend` function, will be attached to the class and will be accessible via the class name (not through an instance of the class).
+#####The `"@static"` option
+The role of the `"@static"` option is to specify, also in a KVP manner, the *static* members of the class. These members, which may include functions and constant values (i.e. the `extend` function), will be attached to the class function itself and will be accessible via the class name (not through an instance of the class).
 
-#####The `"@private"` property
+#####The `"@private"` option
 The role of the `"@private"` option is to specify the internal state of the class (its instance *data fields* along with their *descriptors*), also in a similar KVP manner, where the key is the name of the **data field** and the value is its corresponding ***data field descriptor***.
 
-A ***data field descriptor*** is an object literal containing (in a KVP format) the options applicabile for defining a particular ***data field*** of the class.
+- A ***data field descriptor*** is an object literal containing (in a KVP format) the options applicabile for defining a particular ***data field*** of the class.
 
-A ***data field*** of the class, on the other hand, is a data element that defines the internal state of an instance of the class. Internally, it is backed up by a *private* instance variable, which should not be accessed directly by any code outside of the class definition. Instead, to access and/or modify a ***data field*** of an instance of the class should **only** be done through the predefined generic API of *setters* and *getters* available to all instances of a class.
+- A ***data field*** of the class, on the other hand, is a data element that defines the internal state of an instance of the class. 
 
-Moreover, because a ***data field*** could either be a **property** (a type of ***data field*** that can store a single-value data), or an **aggregation** (a type of ***data field*** that can store a collection or reference multiple values of similar data type), the ***data field descriptors*** inside the `"@private"` option of the ***class descriptor*** parameter are split into:
+Internally, a ***data field*** is backed up by a *private* instance variable, which should not be accessed directly by any code outside of the class. Instead, to access and/or modify a ***data field*** of an instance of the class should **only** be done through the predefined generic API of *setters* and *getters* available to all instances of a class.
 
-- `properties` - an object literal that holds the ***property descriptors*** (the ***data field descriptors*** for the *properties* of the class), and
-- `aggregations` - an object literal that holds the ***aggregation descriptors*** (the ***data field descriptors*** for the *aggregations* of the class).
+Because a ***data field*** could either be a **property** (a type of ***data field*** that can store a single-value data), or an **aggregation** (a type of ***data field*** that can store a collection or reference multiple values of similar data type), each ***data field descriptor*** inside the `"@private"` option of the ***class descriptor*** parameter, will also belong to one of the two options listed below:
+- `properties`, which is an object literal that holds the ***property descriptors*** (the ***data field descriptors*** for the *properties* of the class),
+- `aggregations`, which is an object literal that holds the ***aggregation descriptors*** (the ***data field descriptors*** for the *aggregations* of the class).
 
-Below is the basic structure of the `"@private"` option and its ***data field descriptor*** groups:
+Here is the basic structure of the `"@private"` option and its ***data field descriptor***:
 
 	// ....
 	// data fields descriptor
