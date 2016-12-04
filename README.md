@@ -1,7 +1,7 @@
-## LiteClass
+LiteClass
 ==
 
-A small JS module which intends to facilitate object-oriented development in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.
+A small JS module which intends to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.
 
 ### Installation Guide
 This module is designed to work both in a client-side (i.e. browser) and a server-side (i.e. Node.js) environment.
@@ -25,35 +25,36 @@ and then to load it with the `require` function
 `1.0.1`
 
 ### Description
-From the user's perspective **LiteClass** is a simple JS constructor function enhanced with support for some basic OOP features, such as inheritance, data abstraction, member definition (i.e. methods, static properties, instance data fields, etc.) and data field access control (a predefined generic API of *getters* and *setters*), as well as built-in event triggering and handeling mechanism.
+From the user's perspective **LiteClass** is a pure JS constructor function enhanced with support for some basic OOP features, such as inheritance, data abstraction, member definition (i.e. methods, static properties, instance data fields, etc.) and data field access control (a predefined generic API of *getters* and *setters*), as well as a built-in event triggering and handling mechanism.
+
 The role of this constructor is to serve as the *super-class* of all JS classes (constructor functions) in a project, so that all the instances of itself and the instances of its *sub-classes* inherit and share the same basic set of OOP features and capabilities.
 
 
 ### Inheritance
-Through its support for inheritance this *super-class* constructor function has the ability to create other JS constructor functions similar to itself. For this reason each **LiteClass** constructor, *super-class* or *sub-class*, will *own* a version of a *static* function called `extend`. The role of this function is to create and return new class constructors by creating new functions and to have them inherit, through the standard JS prototypal inheritance process, all the properties and features of the class constructor that *owns* it.
+To support inheritance, and implicitly, the ability of creating other JS constructor functions similar to itself, each **LiteClass** constructor, whether its the *super-class* or a *sub-class*, will *own* a version of a *static* function called `extend`. The role of this function is to create and return new class constructors by sub-classing, through the process of prototypal inheritance, the class constructor that *owns* it.
 
 
 #### Creating new classes
-To create a new class we need to invoke the *static* function `extend` of the super-class (the class to extend), as in the following example:
+To sub-class, or create a new class of type **LiteClass** we need to invoke the *static* function `extend` of the super-class as in the following example:
 
 	var MyClass = LiteClass.extend();
     
-The succesful execution of this function will create and return a new class (constructor function), which will be referenced by the `MyClass` variable. This class will be identical with its superclass (the **LiteClass** constructor, in this case) in the sense that it will contain no additional data fields or functionality.
+After the successful execution of this statement the `MyClass` variable will reference a new class constructor identical with its super-class (the **LiteClass** constructor, in this case) in the sense that it will contain no additional data fields or functionality.
 
 ##### The ***class descriptor*** parameter
-The example above shows that the *static* function `extend` does not have any required parameters. However, it does support a paramenter of type `object`, which is the ***class descriptor*** or `mOptions` parameter. The role of this paramenter is to contain, and pass to the `extend` function call, the class definition options in a key-value pair (KVP) format. As shown in the following example, these class definiton options may include additional functionality and/or data fields specific to the new class.
+The example above shows that the *static* function `extend` does not have any required parameters. However, it does support a parameter of type `object`, which is the ***class descriptor*** parameter. The role of this parameter object is to contain, and pass to the `extend` function call, the class definition options in a key-value pair (KVP) format. As shown in the following example, these class defining options may include additional functionality and/or data fields specific to the new class.
 
 	// create the new class with a **class descriptor** parameter
 	var MyClass = LiteClass.extend({
 	
-		// the private data field of the class (data fields descriptor)
+		// the private data field of the class (data fields descriptors)
 		"@private": {
 
-			// property descriptor
+			// property descriptors
 			properties: {
 			},
 		
-			// aggregation descriptor
+			// aggregation descriptors
 			aggregations: {
 			}
 		},
@@ -100,11 +101,10 @@ The role of the `"@private"` option is to specify the internal state of the clas
 
 - A ***data field descriptor*** is an object literal containing (in a KVP format) the options applicabile for defining a particular ***data field*** of the class.
 
-- A ***data field*** of the class, on the other hand, is a data element that defines the internal state of an instance of the class. 
-
-Internally, a ***data field*** is backed up by a *private* instance variable, which should not be accessed directly by any code outside of the class. Instead, to access and/or modify a ***data field*** of an instance of the class should **only** be done through the predefined generic API of *setters* and *getters* available to all instances of a class.
+- A ***data field*** of the class, on the other hand, is a data element that defines the internal state of an instance of the class. Internally, a ***data field*** is backed up by a *private* instance variable, which should not be accessed directly by any code outside of the class. Instead, to access and/or modify a ***data field*** of an instance of the class should **only** be done through the predefined generic API of *setters* and *getters* available to all instances of a class.
 
 Because a ***data field*** could either be a **property** (a type of ***data field*** that can store a single-value data), or an **aggregation** (a type of ***data field*** that can store a collection or reference multiple values of similar data type), each ***data field descriptor*** inside the `"@private"` option of the ***class descriptor*** parameter, will also belong to one of the two options listed below:
+
 - `properties`, which is an object literal that holds the ***property descriptors*** (the ***data field descriptors*** for the *properties* of the class),
 - `aggregations`, which is an object literal that holds the ***aggregation descriptors*** (the ***data field descriptors*** for the *aggregations* of the class).
 
@@ -130,16 +130,16 @@ Here is the basic structure of the `"@private"` option and its ***data field des
 		}
 	}
 
-The `<<name>>` placeholder, in the code snippet above, represents the name of the **data field** that particular ***data field descriptor*** describes, and its value is the object literal containing the set of applicabile *options* for defining it as a data field of the class.
+The `<<name>>` placeholder, in the code snippet above, represents the name of the **data field** that a particular ***data field descriptor*** describes, and its value is the object literal containing the set of applicable *options* for defining it as a data field of the class.
 
 #####The `validator` option
-One of such options, applicable to both categories of data fields, is called `validator` and its value, referenced by the `<<function>>` placeholder, is a Boolean returning function. The role of this is function is to *validate* a value before assigning it to that data field. More specifically, it can be used to decide whether to accept or reject a given value before assigning it to that data field. Therefore, when providing a `validator` option it is very important to make sure that it’s value is a function that returns `true` if the argument it is called with is a valid value for that data field, or `false` otherwise. By default, the *`validator`* function returns `true` in any case, allowing any value to be assigned to that data field. 
+One of the options, applicable to both categories of data fields, is called `validator` and its value, referenced by the `<<function>>` placeholder, is a Boolean returning function. The role of this function is to *validate* a value before assigning it to that data field. More specifically, it serves to decide whether to accept or reject a given value before assigning it to that data field. Therefore, when providing a `validator` option it is very important to make sure that it’s value is a function that returns `true` if the argument it is called with is a valid value for that data field, or `false` otherwise. By default, the *`validator`* function returns `true` in any case, allowing any value to be assigned to that data field. 
 
 #####The `defaultValue` option
-Another definition *option* for a ***data field descriptor*** is called `defaultValue` and is applicable to the *property* types of ***data fields*** only. Its role is to hold a *default* value for that particular property, which will be used to initialize the property if the user does not provide an instantiation value. By default, the value of the `defaultValue` property of any ***property descriptor*** is `null`.
+Another defining *option* for a ***data field descriptor*** is called `defaultValue` and is applicable to the *property* types of ***data fields*** only. Its role is to hold a *default* value for that particular property, which will be used to initialize the property if the user does not provide an instantiation value. By default, the value of the `defaultValue` option of any ***property descriptor*** is `null`.
 
 #####The `public` interface
-All the other options (properties) of the ***class descriptor*** argument, including the user-defined ones, will be interpreted as the public interface of the class and will be attached to the its prototype. Therefore, they will be accessible only via an instance of the class.
+All the other options (properties) of the ***class descriptor*** argument, including the user-defined ones, will be interpreted as the public interface of the class and will be attached to its prototype. Therefore, they will be accessible only via an instance of the class.
 
 #####Example
 Here is an example of a simple class definition:
@@ -236,7 +236,7 @@ Because the `LiteClass` instances are created using the `new` keyword, it is pos
 	obj instanceof Plane; // false
 
 #####The `mSettings` argument
-To instantiate a ***LiteClass*** type with user-defined values for its data fields, the default constructor supports an optional parameter, `mSettings`. This parameter is an object literal that passes to the constructor instantiation values for the predefined ***data fields*** of the class. In other words, each key of the `mSettings` object should match the name of a data field (*property* or *aggregation*) defined in the `"@private"` option of the ***class descriptor*** parameter. Any key in `mSettings` object that does not match the name of a ***data field*** will be ignored. Moreover, the value of each key in the `mSettings` parameter should be valid for its corresponding data field of the class, otherwise it will be rejected during validation and its default value used instead.
+To instantiate a ***LiteClass*** type with user-defined values for its data fields, the default constructor supports an optional parameter, `mSettings`. This parameter is an object literal that passes to the constructor instantiation values for the predefined ***data fields*** of the class. In other words, each key of the `mSettings` object should match the name of a data field (*property* or *aggregation*) defined in the `"@private"` option of the ***class descriptor*** parameter. Any key in `mSettings` object that does not match the name of a ***data field*** will be ignored. Moreover, the value of each key in the `mSettings` parameter should be valid for its corresponding data field of the class. Otherwise it will be rejected during validation and its default value will be used instead.
 
 	var car = new Car({
 		make: "Ford",

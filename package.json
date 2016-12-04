@@ -1,19 +1,19 @@
 {
-  "name": "LiteClass",
+  "name": "liteclass",
   "version": "1.0.1",
   "description": "Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.",
-  "main": "dist/class.js",
+  "main": "demo/SimpleDemo/index.html",
   "private": true,
   "dependencies": {},
   "scripts": {
     "make": "browserify src/class.js --standalone LiteClass -o dist/class.js",
-    "nw": "nw test/SimpleDemo/index.html",
+    "nw": "nw 'demo/SimpleDemo/index.html'",
     "prepublish": "npm run make",
-    "test": "echo 'Error: no test specified' && exit 1"
+    "test": "nw 'test/index.html'"
   },
   "window": {
-  	"width": 360,
-  	"height": 600
+    "width": 900,
+    "height": 600
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,9 @@
     "url": "https://github.com/lucivuc/LiteClass/issues"
   },
   "devDependencies": {
-    "nwjs": "^1.4.2"
+    "browserify": "^13.1.1",
+    "nw": "^0.18.2",
+    "nwjs": "^1.4.2",
+    "qunitjs": "^2.0.1"
   }
 }

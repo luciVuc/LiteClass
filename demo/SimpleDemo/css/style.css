@@ -43,6 +43,10 @@ div.appView input[type="checkbox"] {
 	padding: 0 6px;
 }
 
+.headerView {
+	display: block;
+}
+
 .editForm {
 	border: dotted 1px #999999;
 	border-radius: 3px;
