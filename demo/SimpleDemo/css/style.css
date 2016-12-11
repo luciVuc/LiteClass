@@ -28,6 +28,7 @@ div.appView input[type="submit"],
 div.appView input[type="reset"] {
 	width: 25px;
 	height: 25px;
+	vertical-align: middle;
 }
 
 div.appView input[type="checkbox"] {
@@ -45,6 +46,14 @@ div.appView input[type="checkbox"] {
 
 .headerView {
 	display: block;
+}
+
+.headerView > details > summary {
+	height: 24px;
+    border: 1px solid #cccccc;
+    padding: 3px;
+    vertical-align: middle;
+	background-color: #efefef;
 }
 
 .editForm {
@@ -67,13 +76,10 @@ div.appView input[type="checkbox"] {
 	height: 60px;
 }
 
-.listView {
-	height: calc(100% - 270px);
-	overflow-y: auto;
-}
-
 .listView > ul {
 	padding: 0 8px;
+	height: calc(100vh - 92px);
+	overflow-y: auto;
 }
 
 .listView table th {

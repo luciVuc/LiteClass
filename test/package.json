@@ -1,0 +1,34 @@
+{
+  "name": "liteclass",
+  "version": "1.0.1",
+  "description": "Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.",
+  "main": "index.html",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "test": "nw 'index.html'"
+  },
+  "window": {
+    "width": 900,
+    "height": 600
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/luciVuc/LiteClass.git"
+  },
+  "keywords": [
+    "jsclass",
+    "javascipt",
+    "class",
+    "oop",
+    "object oriented js",
+    "js",
+    "inheritance",
+    "extend"
+  ],
+  "author": "Lucian Vuc <lucian.vuc@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lucivuc/LiteClass/issues"
+  }
+}
