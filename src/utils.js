@@ -22,7 +22,7 @@
 /* jslint browser: true, node: true, white: true, forin: true, nomen: true, unparam: true, sloppy: false, vars: true */
 
 var EventEmitter = require('events'),
-		uid = require("./uid");
+	uid = require("./uid");
 
 /**
  * Enhances the function given as the first argument by extanding its prototype
@@ -206,9 +206,10 @@ var extend = function(fSuperCtor, mPrivate, mPublic, mStatic) {
 	 * @param  {object}   mSettings  - an optional object literal containing the instantiation values
 	 * @returns    {object}    this instance, to enable method call chaining
 	 */
-	var Ctor = function( /* mSettings */ ) {
-		var _mPrivate = mPrivate,
-			mSettings = arguments[0] || {};
+	var fCtor = function(mSettings) {
+		var _mPrivate = mPrivate;
+
+		mSettings = typeof mSettings === "object" ? mSettings : {};
 
 		// sets the instance identifier
 		if (!this["_#"]) {
@@ -224,22 +225,22 @@ var extend = function(fSuperCtor, mPrivate, mPublic, mStatic) {
 			'@private': _mPrivate,
 			initializeFirst: true
 		});
-		this.init.call(this, mSettings);
+		this.initialize.call(this, mSettings);
 		return this;
 	};
 
 	// perform inheritance steps
-	Ctor = extendFunction(Ctor, fSuperCtor);
-	Ctor = extendObject(Ctor, mStatic);
-	Ctor.prototype = extendObject(Ctor.prototype, mPublic);
-	Ctor.extend = fCtorExtend.bind(Ctor);
+	fCtor = extendFunction(fCtor, fSuperCtor);
+	fCtor = extendObject(fCtor, mStatic);
+	fCtor.prototype = extendObject(fCtor.prototype, mPublic);
+	fCtor.extend = fCtorExtend.bind(fCtor);
 
 	// freeze the default static members
-	Object.freeze(Ctor.extend);
-	Object.freeze(Ctor.METADATA);
-	Object.freeze(Ctor.getInstanceById);
-	Object.freeze(Ctor.getIdOf);
-	return Ctor;
+	Object.freeze(fCtor.extend);
+	Object.freeze(fCtor.METADATA);
+	Object.freeze(fCtor.getInstanceById);
+	Object.freeze(fCtor.getIdOf);
+	return fCtor;
 };
 
 module.exports.extend = extend;

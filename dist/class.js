@@ -327,8 +327,8 @@ function isUndefined(arg) {
 /* jslint browser: true, node: true, white: true, forin: true, nomen: true, unparam: true, sloppy: false, vars: true */
 
 var EventEmitter = require('events'),
-		uid = require("./uid"),
-		utils = require("./utils");
+	uid = require("./uid"),
+	utils = require("./utils");
 
 /**
  * @public
@@ -338,16 +338,6 @@ var EventEmitter = require('events'),
  * (through its super-class, the 'EventEmitter').
  */
 var Class = utils.extend(EventEmitter, null, {
-	/**
-	 * @public
-	 * Registers event listeners to handle events triggered by this instance.
-	 *
-	 * @param   {string}  sType   the name of the event to register for
-	 * @param   {function}  fListener    the event handler
-	 * @returns   {object}    this instance, to enable method call chaining
-	 */
-	addEventListener: EventEmitter.prototype.addListener,
-
 	/**
 	 * @public
 	 * Registers one-time event listeners to handle events triggered by this instance.
@@ -396,7 +386,7 @@ var Class = utils.extend(EventEmitter, null, {
 	 *
 	 * @returns   {object}  this instance, to enable method call chaining
 	 */
-	init: function() {
+	initialize: function() {
 		return this;
 	},
 
@@ -439,8 +429,9 @@ var Class = utils.extend(EventEmitter, null, {
 			this.__proto__ = null;
 		}
 
-		// delete mIDs[this._#];
 		uid.deleteId(this["_#"]);
+		delete this["_#"];
+		delete this._maxListeners;
 		return;
 	},
 
@@ -687,7 +678,7 @@ var Class = utils.extend(EventEmitter, null, {
 		if (typeof _mPrivate[sName].validator === 'function' && _mPrivate[sName].validator(vItem) === true) {
 			this._aggregations[sName] = this._aggregations[sName] instanceof Array ? this._aggregations[sName] : [];
 			nIndex = parseInt(nIndex);
-			nIndex = !!nIndex && nIndex >= 0 && nIndex < this._aggregations[sName].length ? nIndex : this._aggregations[sName].length;
+			nIndex = !isNaN(nIndex) && nIndex >= 0 && nIndex < this._aggregations[sName].length ? nIndex : this._aggregations[sName].length;
 			this._aggregations[sName].splice(nIndex, 0, vItem);
 			if (bSupressEvent !== true) {
 				var evt = {
@@ -842,7 +833,7 @@ var Class = utils.extend(EventEmitter, null, {
 		}
 		this._aggregations[sName] = this._aggregations[sName] instanceof Array ? this._aggregations[sName] : [];
 		nIndex = parseInt(nIndex);
-		if (!!nIndex) {
+		if (!isNaN(nIndex)) {
 			value = this._aggregations[sName].splice(nIndex, 1)[0];
 
 			if (bSupressEvent !== true) {
@@ -997,22 +988,22 @@ var Class = utils.extend(EventEmitter, null, {
 });
 
 // setup some aliases
-var cProto = Class.prototype;
+var oPrototype = Class.prototype;
 
 /**
- * @lends Class.prototype.init
+ * @lends Class.prototype.initialize
  */
-cProto.initialize = cProto.init;
+oPrototype.init = oPrototype.initialize;
 
 /**
  * @lends Class.prototype.setProperty
  */
-cProto.set = cProto.setProperty;
+oPrototype.set = oPrototype.setProperty;
 
 /**
  * @public  Alias for 'getProperty' and 'getAggregation'
  */
-cProto.get = function(sName) {
+oPrototype.get = function(sName) {
 	var _mPrivate = this.constructor.METADATA,
 		props = this._properties,
 		aggs = this._aggregations;
@@ -1028,62 +1019,62 @@ cProto.get = function(sName) {
 /**
  * @lends Class.prototype.getAggregationAsHashMap
  */
-cProto.toHashMap = cProto.getAggregationAsHashMap;
+oPrototype.toHashMap = oPrototype.getAggregationAsHashMap;
 
 /**
  * @lends Class.prototype.getAggregationAt
  */
-cProto.at = cProto.getAggregationAt;
+oPrototype.at = oPrototype.getAggregationAt;
 
 /**
  * @lends Class.prototype.indexOfAggregation
  */
-cProto.indexOf = cProto.indexOfAggregation;
+oPrototype.indexOf = oPrototype.indexOfAggregation;
 
 /**
  * @lends Class.prototype.addAggregation
  */
-cProto.add = cProto.addAggregation;
+oPrototype.add = oPrototype.addAggregation;
 
 /**
  * @lends Class.prototype.addFirstAggregation
  */
-cProto.addFirst = cProto.addFirstAggregation;
+oPrototype.addFirst = oPrototype.addFirstAggregation;
 
 /**
  * @lends Class.prototype.insertAtAggregation
  */
-cProto.insertAt = cProto.insertAtAggregation;
+oPrototype.insertAt = oPrototype.insertAtAggregation;
 
 /**
  * @lends Class.prototype.removeLastAggregation
  */
-cProto.removeFirst = cProto.removeFirstAggregation;
+oPrototype.removeFirst = oPrototype.removeFirstAggregation;
 
 /**
  * @lends Class.prototype.removeLastAggregation
  */
-cProto.removeLast = cProto.removeLastAggregation;
+oPrototype.removeLast = oPrototype.removeLastAggregation;
 
 /**
  * @lends Class.prototype.removeAggregation
  */
-cProto.remove = cProto.removeAggregation;
+oPrototype.remove = oPrototype.removeAggregation;
 
 /**
  * @lends Class.prototype.removeAggregationAt
  */
-cProto.removeAt = cProto.removeAggregationAt;
+oPrototype.removeAt = oPrototype.removeAggregationAt;
 
 /**
  * @lends Class.prototype.removeAllAggregations
  */
-cProto.removeAll = cProto.removeAllAggregation;
+oPrototype.removeAll = oPrototype.removeAllAggregation;
 
 /**
  * @lends Class.prototype.applySettings
  */
-cProto.apply = cProto.applySettings;
+oPrototype.apply = oPrototype.applySettings;
 
 exports = module.exports = Class;
 },{"./uid":3,"./utils":4,"events":1}],3:[function(require,module,exports){
@@ -1198,7 +1189,7 @@ module.exports.deleteId = function(sId) {
 /* jslint browser: true, node: true, white: true, forin: true, nomen: true, unparam: true, sloppy: false, vars: true */
 
 var EventEmitter = require('events'),
-		uid = require("./uid");
+	uid = require("./uid");
 
 /**
  * Enhances the function given as the first argument by extanding its prototype
@@ -1382,9 +1373,10 @@ var extend = function(fSuperCtor, mPrivate, mPublic, mStatic) {
 	 * @param  {object}   mSettings  - an optional object literal containing the instantiation values
 	 * @returns    {object}    this instance, to enable method call chaining
 	 */
-	var Ctor = function( /* mSettings */ ) {
-		var _mPrivate = mPrivate,
-			mSettings = arguments[0] || {};
+	var fCtor = function(mSettings) {
+		var _mPrivate = mPrivate;
+
+		mSettings = typeof mSettings === "object" ? mSettings : {};
 
 		// sets the instance identifier
 		if (!this["_#"]) {
@@ -1400,22 +1392,22 @@ var extend = function(fSuperCtor, mPrivate, mPublic, mStatic) {
 			'@private': _mPrivate,
 			initializeFirst: true
 		});
-		this.init.call(this, mSettings);
+		this.initialize.call(this, mSettings);
 		return this;
 	};
 
 	// perform inheritance steps
-	Ctor = extendFunction(Ctor, fSuperCtor);
-	Ctor = extendObject(Ctor, mStatic);
-	Ctor.prototype = extendObject(Ctor.prototype, mPublic);
-	Ctor.extend = fCtorExtend.bind(Ctor);
+	fCtor = extendFunction(fCtor, fSuperCtor);
+	fCtor = extendObject(fCtor, mStatic);
+	fCtor.prototype = extendObject(fCtor.prototype, mPublic);
+	fCtor.extend = fCtorExtend.bind(fCtor);
 
 	// freeze the default static members
-	Object.freeze(Ctor.extend);
-	Object.freeze(Ctor.METADATA);
-	Object.freeze(Ctor.getInstanceById);
-	Object.freeze(Ctor.getIdOf);
-	return Ctor;
+	Object.freeze(fCtor.extend);
+	Object.freeze(fCtor.METADATA);
+	Object.freeze(fCtor.getInstanceById);
+	Object.freeze(fCtor.getIdOf);
+	return fCtor;
 };
 
 module.exports.extend = extend;

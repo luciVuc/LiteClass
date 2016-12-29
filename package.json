@@ -2,14 +2,13 @@
   "name": "liteclass",
   "version": "1.0.1",
   "description": "Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.",
-  "main": "demo/SimpleDemo/index.html",
+  "main": "test/index.html",
   "private": true,
   "dependencies": {},
   "scripts": {
     "make": "browserify src/class.js --standalone LiteClass -o dist/class.js",
-    "nw": "nw 'demo/SimpleDemo/index.html'",
     "prepublish": "npm run make",
-    "test": "nw 'test/index.html'"
+    "test": "nw ."
   },
   "window": {
     "width": 900,
@@ -21,11 +20,11 @@
   },
   "keywords": [
     "jsclass",
-    "javascipt",
+    "javascript",
     "class",
     "oop",
     "object oriented js",
-    "js",
+    "oop js",
     "inheritance",
     "extend"
   ],

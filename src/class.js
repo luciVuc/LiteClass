@@ -22,8 +22,8 @@
 /* jslint browser: true, node: true, white: true, forin: true, nomen: true, unparam: true, sloppy: false, vars: true */
 
 var EventEmitter = require('events'),
-		uid = require("./uid"),
-		utils = require("./utils");
+	uid = require("./uid"),
+	utils = require("./utils");
 
 /**
  * @public
@@ -33,16 +33,6 @@ var EventEmitter = require('events'),
  * (through its super-class, the 'EventEmitter').
  */
 var Class = utils.extend(EventEmitter, null, {
-	/**
-	 * @public
-	 * Registers event listeners to handle events triggered by this instance.
-	 *
-	 * @param   {string}  sType   the name of the event to register for
-	 * @param   {function}  fListener    the event handler
-	 * @returns   {object}    this instance, to enable method call chaining
-	 */
-	addEventListener: EventEmitter.prototype.addListener,
-
 	/**
 	 * @public
 	 * Registers one-time event listeners to handle events triggered by this instance.
@@ -91,7 +81,7 @@ var Class = utils.extend(EventEmitter, null, {
 	 *
 	 * @returns   {object}  this instance, to enable method call chaining
 	 */
-	init: function() {
+	initialize: function() {
 		return this;
 	},
 
@@ -135,6 +125,8 @@ var Class = utils.extend(EventEmitter, null, {
 		}
 
 		uid.deleteId(this["_#"]);
+		delete this["_#"];
+		delete this._maxListeners;
 		return;
 	},
 
@@ -381,7 +373,7 @@ var Class = utils.extend(EventEmitter, null, {
 		if (typeof _mPrivate[sName].validator === 'function' && _mPrivate[sName].validator(vItem) === true) {
 			this._aggregations[sName] = this._aggregations[sName] instanceof Array ? this._aggregations[sName] : [];
 			nIndex = parseInt(nIndex);
-			nIndex = !!nIndex && nIndex >= 0 && nIndex < this._aggregations[sName].length ? nIndex : this._aggregations[sName].length;
+			nIndex = !isNaN(nIndex) && nIndex >= 0 && nIndex < this._aggregations[sName].length ? nIndex : this._aggregations[sName].length;
 			this._aggregations[sName].splice(nIndex, 0, vItem);
 			if (bSupressEvent !== true) {
 				var evt = {
@@ -536,7 +528,7 @@ var Class = utils.extend(EventEmitter, null, {
 		}
 		this._aggregations[sName] = this._aggregations[sName] instanceof Array ? this._aggregations[sName] : [];
 		nIndex = parseInt(nIndex);
-		if (!!nIndex) {
+		if (!isNaN(nIndex)) {
 			value = this._aggregations[sName].splice(nIndex, 1)[0];
 
 			if (bSupressEvent !== true) {
@@ -691,22 +683,22 @@ var Class = utils.extend(EventEmitter, null, {
 });
 
 // setup some aliases
-var cProto = Class.prototype;
+var oPrototype = Class.prototype;
 
 /**
- * @lends Class.prototype.init
+ * @lends Class.prototype.initialize
  */
-cProto.initialize = cProto.init;
+oPrototype.init = oPrototype.initialize;
 
 /**
  * @lends Class.prototype.setProperty
  */
-cProto.set = cProto.setProperty;
+oPrototype.set = oPrototype.setProperty;
 
 /**
  * @public  Alias for 'getProperty' and 'getAggregation'
  */
-cProto.get = function(sName) {
+oPrototype.get = function(sName) {
 	var _mPrivate = this.constructor.METADATA,
 		props = this._properties,
 		aggs = this._aggregations;
@@ -722,61 +714,61 @@ cProto.get = function(sName) {
 /**
  * @lends Class.prototype.getAggregationAsHashMap
  */
-cProto.toHashMap = cProto.getAggregationAsHashMap;
+oPrototype.toHashMap = oPrototype.getAggregationAsHashMap;
 
 /**
  * @lends Class.prototype.getAggregationAt
  */
-cProto.at = cProto.getAggregationAt;
+oPrototype.at = oPrototype.getAggregationAt;
 
 /**
  * @lends Class.prototype.indexOfAggregation
  */
-cProto.indexOf = cProto.indexOfAggregation;
+oPrototype.indexOf = oPrototype.indexOfAggregation;
 
 /**
  * @lends Class.prototype.addAggregation
  */
-cProto.add = cProto.addAggregation;
+oPrototype.add = oPrototype.addAggregation;
 
 /**
  * @lends Class.prototype.addFirstAggregation
  */
-cProto.addFirst = cProto.addFirstAggregation;
+oPrototype.addFirst = oPrototype.addFirstAggregation;
 
 /**
  * @lends Class.prototype.insertAtAggregation
  */
-cProto.insertAt = cProto.insertAtAggregation;
+oPrototype.insertAt = oPrototype.insertAtAggregation;
 
 /**
  * @lends Class.prototype.removeLastAggregation
  */
-cProto.removeFirst = cProto.removeFirstAggregation;
+oPrototype.removeFirst = oPrototype.removeFirstAggregation;
 
 /**
  * @lends Class.prototype.removeLastAggregation
  */
-cProto.removeLast = cProto.removeLastAggregation;
+oPrototype.removeLast = oPrototype.removeLastAggregation;
 
 /**
  * @lends Class.prototype.removeAggregation
  */
-cProto.remove = cProto.removeAggregation;
+oPrototype.remove = oPrototype.removeAggregation;
 
 /**
  * @lends Class.prototype.removeAggregationAt
  */
-cProto.removeAt = cProto.removeAggregationAt;
+oPrototype.removeAt = oPrototype.removeAggregationAt;
 
 /**
  * @lends Class.prototype.removeAllAggregations
  */
-cProto.removeAll = cProto.removeAllAggregation;
+oPrototype.removeAll = oPrototype.removeAllAggregation;
 
 /**
  * @lends Class.prototype.applySettings
  */
-cProto.apply = cProto.applySettings;
+oPrototype.apply = oPrototype.applySettings;
 
 exports = module.exports = Class;

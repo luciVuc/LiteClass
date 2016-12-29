@@ -1,6 +1,6 @@
 /*jslint browser: true, node: true, white: false, nomen: false, sloppy: false, stupid: false, vars: true, esnext: true*/
 
-var Class = window.LiteClass || require("./src/class"); // if it is available;
+var Class = window.LiteClass || require("./../../src/class"); // if it is available;
 
 // 1. setup the namespace
 var app = window.app = {
@@ -307,10 +307,20 @@ app.class.List = app.class.View.extend({
 
 // 5. Define the app controller
 app.class.Controller = Class.extend({
+	// details toggle handler
+	detailsToggleHandler: function ($details, event) {
+		if (this.open) {
+			$details.style.height = "calc(100vh - 270px)";
+		} else {
+			$details.style.height = "";			
+		}
+	},
+
 	// delete button handler
 	delBtnPressHandler: function (event) {
 		var li = event.path ? event.path[2] : event.srcElement.parentElement.parentElement,
-			data = JSON.parse(unescape(li.getAttribute("data-item")));
+				data = JSON.parse(unescape(li.getAttribute("data-item")));
+		
 		if (confirm("Delete item " + data.id + ". Are you sure?")) {
 			return this.removeAggregationAt("items", this.getIndexOfItem(data.id));
 		}
@@ -318,47 +328,48 @@ app.class.Controller = Class.extend({
 	},
 
 	// edit button handler
-	editBtnPressHandler: function (event) {
+	editBtnPressHandler: function ($details, $txtId, $txtTitle, $txtBody, event) {
 		var li = event.path ? event.path[2] : event.srcElement.parentElement.parentElement,
-			data = JSON.parse(unescape(li.getAttribute("data-item")));
+				data = JSON.parse(unescape(li.getAttribute("data-item")));
 
-		this._$txtId.value = data.id;
-		this._$txtTitle.value = data.title;
-		this._$txtBody.value = data.body;
+		$details.open = true;
+		$txtId.value = data.id;
+		$txtTitle.value = data.title;
+		$txtBody.value = data.body;
 	},
 
 	// save button handler
-	saveBtnPressHandler: function saveBtnPressHandler() {
-		var id = this._$txtId.value && Number(this._$txtId.value),
+	saveBtnPressHandler: function saveBtnPressHandler($txtId, $txtTitle, $txtBody, event) {
+		var id = $txtId.value && Number($txtId.value),
 			itemIndex = app.view.list.getIndexOfItem(id),
 			item = null;
 
 		if (itemIndex >= 0) {
 			item = app.view.list.getAggregationAt("items", itemIndex);
 			item
-				.setProperty("title", this._$txtTitle.value, true)
-				.setProperty("body", this._$txtBody.value);
+				.setProperty("title", $txtTitle.value, true)
+				.setProperty("body", $txtBody.value);
 			app.view.list.render();
 		} else {
 			app.view.list.addAggregation("items", new app.class.ListItem({
-				id: this._$txtId.value || Number(new Date()), // app.view.list.getAggregation("items").length,
-				title: this._$txtTitle.value,
-				body: this._$txtBody.value
+				id: txtId.value || Number(new Date()),
+				title: $txtTitle.value,
+				body: $txtBody.value
 			}));
 		}
 		return false;
 	},
 
 	// reset button handler
-	resetBtnPressHandler: function (event) {
-		this._$txtId.value = this._$txtTitle.value = this._$txtBody.value = "";
+	resetBtnPressHandler: function ($txtId, $txtTitle, $txtBody, event) {
+		$txtId.value = $txtTitle.value = $txtBody.value = "";
 	},
 
 	// status checkbox handler
 	statusBtnPressHandler: function (event) {
 		var obj = event.target.parentElement.parentElement.parentElement,
-			li = obj.parentElement.parentElement.parentElement,
-			data = JSON.parse(unescape(li.getAttribute("data-item")));
+				li = obj.parentElement.parentElement.parentElement,
+				data = JSON.parse(unescape(li.getAttribute("data-item")));
 
 		return this
 			.getAggregationAt("items", this.getIndexOfItem(data.id), true)
@@ -367,36 +378,40 @@ app.class.Controller = Class.extend({
 
 	// list view rendering handler
 	onListRender: function (event) {
-		// event.source === this; --> true
-		document.querySelector("#appView").innerHTML = event.html; // || listView.render();
+		var $appView = document.querySelector("#appView");
+		$appView.innerHTML = event.html;
 
-		var editForm = event.source._$editForm = document.querySelector("#editForm"),
-			submitBtn = event.source._$submitBtn = editForm.querySelector("#submitBtn"),
-			resetBtn = event.source._$resetBtn = editForm.querySelector("#resetBtn"),
-			delBtns = event.source._$delBtns = document.querySelectorAll(".delBtn"),
-			editBtns = event.source._$editBtns = document.querySelectorAll(".editBtn"),
-			statusChks = event.source._$statusChks = document.querySelectorAll(".statusChk"),
-			b;
+		var $details = $appView.querySelector(".headerView details"),
+				$editForm = $appView.querySelector("#editForm"),
+				$submitBtn = $editForm.querySelector("#submitBtn"),
+				$resetBtn = $editForm.querySelector("#resetBtn"),
+				$listView = $appView.querySelector(".listView"),
+				$listViewUL = $listView.querySelector("ul"),
+				$delBtns = $listViewUL.querySelectorAll(".delBtn"),
+				$editBtns = $listViewUL.querySelectorAll(".editBtn"),
+				$statusChks = $listViewUL.querySelectorAll(".statusChk"),
+				$txtId = editForm.querySelector("#txtId"),
+				$txtTitle = editForm.querySelector("#txtTitle"),
+				$txtBody = editForm.querySelector("#txtBody"),
+				b;
+		
+		$details.addEventListener("toggle", app.class.Controller.prototype.detailsToggleHandler.bind($details, $listViewUL));
 
-		event.source._$txtId = editForm.querySelector("#txtId");
-		event.source._$txtTitle = editForm.querySelector("#txtTitle");
-		event.source._$txtBody = editForm.querySelector("#txtBody");
-
-		editForm.onsubmit = function () {
+		$editForm.onsubmit = function () {
 			return false;
 		};
 
-		submitBtn.addEventListener("click", app.class.Controller.prototype.saveBtnPressHandler.bind(event.source));
-		resetBtn.addEventListener("click", app.class.Controller.prototype.resetBtnPressHandler.bind(event.source));
+		$submitBtn.addEventListener("click", app.class.Controller.prototype.saveBtnPressHandler.bind($submitBtn, $txtId, $txtTitle, $txtBody));
+		$resetBtn.addEventListener("click", app.class.Controller.prototype.resetBtnPressHandler.bind($resetBtn, $txtId, $txtTitle, $txtBody));
 
-		for (b = 0; b < delBtns.length; b++) {
-			delBtns[b].addEventListener("click", app.class.Controller.prototype.delBtnPressHandler.bind(event.source));
+		for (b = 0; b < $delBtns.length; b++) {
+			$delBtns[b].addEventListener("click", app.class.Controller.prototype.delBtnPressHandler.bind(this));
 		}
-		for (b = 0; b < editBtns.length; b++) {
-			editBtns[b].addEventListener("click", app.class.Controller.prototype.editBtnPressHandler.bind(event.source));
+		for (b = 0; b < $editBtns.length; b++) {
+			$editBtns[b].addEventListener("click", app.class.Controller.prototype.editBtnPressHandler.bind($editBtns[b], $details, $txtId, $txtTitle, $txtBody));
 		}
-		for (b = 0; b < statusChks.length; b++) {
-			statusChks[b].addEventListener("click", app.class.Controller.prototype.statusBtnPressHandler.bind(event.source));
+		for (b = 0; b < $statusChks.length; b++) {
+			$statusChks[b].addEventListener("click", app.class.Controller.prototype.statusBtnPressHandler.bind(this));
 		}
 	},
 
@@ -412,8 +427,8 @@ app.class.Controller = Class.extend({
 	},
 
 	// 6. Define the app initialize function
-	init: function () {
-		this.constructor.super_.prototype.init.apply(this, arguments);
+	initialize: function () {
+		this.constructor.super_.prototype.initialize.apply(this, arguments);
 
 		var self = this;
 		// load sample data

@@ -1,16 +1,15 @@
 {
-  "name": "liteclass",
-  "version": "1.0.1",
-  "description": "Small JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.",
+  "name": "todo_simpledemo",
+  "version": "1.0.0",
+  "description": "SimpleDemo JS App",
   "main": "index.html",
-  "private": true,
-  "dependencies": {},
   "scripts": {
-    "test": "nw 'index.html'"
+    "start": "npm run nw",
+    "nw": "nw ."
   },
   "window": {
-    "width": 900,
-    "height": 600
+    "width": 500,
+    "height": 800
   },
   "repository": {
     "type": "git",
@@ -30,5 +29,8 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lucivuc/LiteClass/issues"
-  }
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "ISC"
 }
