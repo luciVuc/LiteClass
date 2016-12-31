@@ -48,11 +48,17 @@ div.appView input[type="checkbox"] {
 	display: block;
 }
 
+.headerView > details,
+.headerView > details > summary {
+	width: 100%;
+	display: block;
+}
+
 .headerView > details > summary {
 	height: 24px;
-    border: 1px solid #cccccc;
-    padding: 3px;
-    vertical-align: middle;
+	border: 1px solid #cccccc;
+	padding: 3px;
+	vertical-align: middle;
 	background-color: #efefef;
 }
 
@@ -97,7 +103,7 @@ div.appView input[type="checkbox"] {
 }
 
 .listItem > div:first-child {
-		width: calc(100% - 60px);
+	width: calc(100% - 60px);
 }
 
 .listItem .btn, .editBtn {

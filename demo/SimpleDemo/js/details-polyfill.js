@@ -1,145 +1,71 @@
-void (function (root, factory) {
+(function (root, utils) {
+  if (document.createElement(utils.DETAILS) instanceof HTMLUnknownElement === false) {
+    return;
+  }
 
-  if (typeof define === 'function' && define.amd) define(factory)
-
-  else if (typeof exports === 'object') module.exports = factory()
-
-  else factory()
-
-}(this, function () {
-
-  var DETAILS = 'details'
-
-  var SUMMARY = 'summary'
-
-
-
-  var supported = checkSupport()
-
-  if (supported) return
-
-
-
-  // Add a classname
-
-  document.documentElement.className += ' no-details'
-
-
-
-  window.addEventListener('click', clickHandler)
-
-
-
-  injectStyle('details-polyfill-style',
-
-    'html.no-details ' + DETAILS + ':not([open]) > :not(' + SUMMARY + ') { display: none; }\n' +
-
-    'html.no-details ' + DETAILS + ' > ' + SUMMARY + ':before { content: "▶"; display: inline-block; font-size: .8em; width: 1.5em; }\n' +
-
-    'html.no-details ' + DETAILS + '[open] > ' + SUMMARY + ':before { content: "▼"; }')
-
-
-
-  /*
-
-   * Click handler for `<summary>` tags
-
-   */
-
-
-
-  function clickHandler (e) {
-
-    if (e.target.nodeName.toLowerCase() === 'summary') {
-
-      var details = e.target.parentNode
-
-      if (!details) return
-
-
-
-      if (details.getAttribute('open')) {
-
-        details.open = false
-
-        details.removeAttribute('open')
-
-      } else {
-
-        details.open = true
-
-        details.setAttribute('open', 'open')
-
+  utils.injectStylesheet('details-stylesheet', utils.DETAILS_STYLES);
+  document.documentElement.className += ' ' + utils.CLASS_NAME;
+  document.documentElement.addEventListener("click", utils.onToggle);
+  
+  // define open property
+  Object.defineProperty(HTMLUnknownElement.prototype, "open", {
+    set: function () {
+      if (this.nodeName.toLowerCase() === utils.DETAILS) {
+        var val = !!arguments[0] ? "open" : undefined,
+            b = this.getAttribute('open');
+        if (val !== b) {
+          if (b === "open") {
+            this.removeAttribute('open');
+          } else {
+            this.setAttribute('open', 'open');
+          }
+          this.dispatchEvent(new Event("toggle"));
+        }
       }
-
+    },
+    get: function () {
+      if (this.nodeName.toLowerCase() === utils.DETAILS) {
+        return this.getAttribute('open') === "open";
+      }
     }
-
+  });
+  return;
+}(this, {
+  DETAILS: 'details',
+  SUMMARY: 'summary',
+  CLASS_NAME: 'detailsStyles',
+      
+  DETAILS_STYLES: `.detailsStyles details:not([open]) > :not(summary) {
+    display: none;
   }
 
+  .detailsStyles details > summary:before {
+    content: "▶"; display: inline-block; font-size: .8em; width: 1.5em;
+  }
 
+  .detailsStyles details[open] > summary:before {
+    content: "▼";
+  }`,
 
-  /*
-
-   * Checks for support for `<details>`
-
+  /**
+   * Inject details stylesheet
    */
+  injectStylesheet : function (id, style) {
+    if (!document.getElementById(id)) {
+      var el = document.createElement('style');
+      el.id = id;
+      el.innerHTML = style;
+      document.querySelector('head').appendChild(el);
+    }
+    return;
+  },
 
-
-
-  function checkSupport () {
-
-    var el = document.createElement(DETAILS)
-
-    if (!('open' in el)) return false
-
-
-
-    el.innerHTML = '<' + SUMMARY + '>a</' + SUMMARY + '>b'
-
-    document.body.appendChild(el)
-
-
-
-    var diff = el.offsetHeight
-
-    el.open = true
-
-    var result = (diff != el.offsetHeight)
-
-
-
-    document.body.removeChild(el)
-
-    return result
-
-  }
-
-
-
-  /*
-
-   * Injects styles (idempotent)
-
+  /**
+   * Toggle handler
    */
-
-
-
-  function injectStyle (id, style) {
-
-    if (document.getElementById(id)) return
-
-
-
-    var el = document.createElement('style')
-
-    el.id = id
-
-    el.innerHTML = style
-
-
-
-    document.getElementsByTagName('head')[0].appendChild(el)
-
+  onToggle: function (e) {
+    if (e.target.nodeName.toLowerCase() === "summary") {
+      e.target.parentNode.open = !e.target.parentNode.open;
+    }
   }
-
-})); // eslint-disable-line semi
+}));

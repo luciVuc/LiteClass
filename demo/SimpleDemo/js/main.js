@@ -99,16 +99,21 @@ app.class.ListItem = app.class.View.extend({
 	"@static": {
 		TEMPLATE: {
 			readonly: true,
-			value: '<li class="listItem" data-item="{data}">\
-<div><table>\
-<tr><th>ID :</th><td>{id}</td></tr>\
-<tr><th>Title :</th><td>{title}</td></tr>\
-<tr><th>Body :</th><td>{body}</td></tr>\
-<tr><th>Status :</th><td><input type="checkbox" class="statusChk" {done}> Done</td></tr>\
-</table></div>\
-<div>\
-<input type="button" class="btn editBtn" value="✎" title="Edit">\
-<input type="button" class="btn delBtn" value="✗" title="Delete"></div><hr></li>'
+			value: `<li class="listItem" data-item="{data}">
+				<div>
+					<table>
+						<tr><th>ID :</th><td>{id}</td></tr>
+						<tr><th>Title :</th><td>{title}</td></tr>
+						<tr><th>Body :</th><td>{body}</td></tr>
+						<tr><th>Status :</th><td><input type="checkbox" class="statusChk" {done}> Done</td></tr>
+					</table>
+					</div>
+				<div>
+					<input type="button" class="btn editBtn" value="✎" title="Edit">
+					<input type="button" class="btn delBtn" value="✗" title="Delete">
+				</div>
+				<hr>
+			</li>`
 		}
 	},
 
@@ -227,17 +232,29 @@ app.class.List = app.class.View.extend({
 
 		TEMPLATE: {
 			readonly: true,
-			value: '<section class="mainView">\
-<div class="headerView"><details><summary>SimpleDemo</summary><div><form id="editForm" class="editForm"><fieldset>\
-<legend>Item Editor</legend>\
-<input type="text" id="txtId" name="id" placeholder="ID" readonly>\
-<input type="text" id="txtTitle" name="title" placeholder="Title"><br/>\
-<textarea id="txtBody" name="body" placeholder="Body"></textarea><br/>\
-<input type="submit" title="Submit" id="submitBtn" value="✔">\
-<input type="reset" title="Reset" id="resetBtn" value="X">\</fieldset>\
-</form></div><hr/></details></div>\
-<div class="listView"><h4>{caption} ({count})</h4><hr/><ul>{items}</ul></div>\
-</section>'
+			value: `<section class="mainView">
+				<div class="headerView">
+					<details>
+						<summary>SimpleDemo</summary>
+						<div>
+							<form id="editForm" class="editForm">
+								<fieldset>
+									<legend>Item Editor</legend>
+									<input type="text" id="txtId" name="id" placeholder="ID" readonly>
+									<input type="text" id="txtTitle" name="title" placeholder="Title"><br/>
+									<textarea id="txtBody" name="body" placeholder="Body"></textarea><br/>
+									<input type="submit" title="Submit" id="submitBtn" value="✔">
+									<input type="reset" title="Reset" id="resetBtn" value="X">\
+								</fieldset>
+							</form>
+						</div><hr/>
+					</details>
+				</div>
+				<div class="listView">
+					<h4>{caption} ({count})</h4><hr/>
+					<ul>{items}</ul>
+				</div>
+			</section>`
 		}
 	},
 
@@ -378,22 +395,23 @@ app.class.Controller = Class.extend({
 
 	// list view rendering handler
 	onListRender: function (event) {
-		var $appView = document.querySelector("#appView");
+		var $details, $editForm, $submitBtn, $resetBtn, $listView, $listViewUL,
+				$delBtns, $editBtns, $statusChks, $txtId, $txtTitle, $txtBody, b,
+				$appView = document.querySelector("#appView");
+				
 		$appView.innerHTML = event.html;
-
-		var $details = $appView.querySelector(".headerView details"),
-				$editForm = $appView.querySelector("#editForm"),
-				$submitBtn = $editForm.querySelector("#submitBtn"),
-				$resetBtn = $editForm.querySelector("#resetBtn"),
-				$listView = $appView.querySelector(".listView"),
-				$listViewUL = $listView.querySelector("ul"),
-				$delBtns = $listViewUL.querySelectorAll(".delBtn"),
-				$editBtns = $listViewUL.querySelectorAll(".editBtn"),
-				$statusChks = $listViewUL.querySelectorAll(".statusChk"),
-				$txtId = editForm.querySelector("#txtId"),
-				$txtTitle = editForm.querySelector("#txtTitle"),
-				$txtBody = editForm.querySelector("#txtBody"),
-				b;
+		$details = $appView.querySelector(".headerView details");
+		$editForm = $appView.querySelector("#editForm");
+		$submitBtn = $editForm.querySelector("#submitBtn");
+		$resetBtn = $editForm.querySelector("#resetBtn");
+		$listView = $appView.querySelector(".listView");
+		$listViewUL = $listView.querySelector("ul");
+		$delBtns = $listViewUL.querySelectorAll(".delBtn");
+		$editBtns = $listViewUL.querySelectorAll(".editBtn");
+		$statusChks = $listViewUL.querySelectorAll(".statusChk");
+		$txtId = editForm.querySelector("#txtId");
+		$txtTitle = editForm.querySelector("#txtTitle");
+		$txtBody = editForm.querySelector("#txtBody");
 		
 		$details.addEventListener("toggle", app.class.Controller.prototype.detailsToggleHandler.bind($details, $listViewUL));
 
