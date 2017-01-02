@@ -1,11 +1,10 @@
 {
-  "name": "todo_simpledemo",
+  "name": "liteclass_todo_simpledemo",
   "version": "1.0.0",
   "description": "SimpleDemo JS App",
   "main": "index.html",
   "scripts": {
-    "start": "npm run nw",
-    "nw": "nw ."
+    "start": "nw ."
   },
   "window": {
     "width": 500,
@@ -16,21 +15,25 @@
     "url": "git://github.com/luciVuc/LiteClass.git"
   },
   "keywords": [
-    "jsclass",
-    "javascipt",
-    "class",
+    "javascript",
+    "liteclass js",
     "oop",
     "object oriented js",
-    "js",
+    "oop js",
+    "js class",
     "inheritance",
     "extend"
   ],
   "author": "Lucian Vuc <lucian.vuc@gmail.com>",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/lucivuc/LiteClass/issues"
   },
-  "dependencies": {},
-  "devDependencies": {},
-  "license": "ISC"
+  "dependencies": {
+    "liteclass": "^1.0.1"
+  },
+  "devDependencies": {
+    "nw": "^0.18.2",
+    "nwjs": "^1.4.2"
+  }
 }
