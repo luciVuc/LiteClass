@@ -1350,9 +1350,13 @@ var extend = function(fSuperCtor, mPrivate, mPublic, mStatic) {
 
 	// validate the static members
 	mStatic = typeof mStatic === 'object' ? mStatic : {};
-	mStatic.METADATA = mPrivate;
 	mStatic.getInstanceById = uid.getInstanceById;
 	mStatic.getIdOf = uid.getIdOf;
+	mStatic.METADATA = mPrivate;
+	if (typeof fSuperCtor.METADATA === "object") {
+		Object.setPrototypeOf(mStatic.METADATA.properties, fSuperCtor.METADATA.properties || Object.prototype);
+		Object.setPrototypeOf(mStatic.METADATA.aggregations, fSuperCtor.METADATA.aggregations || Object.prototype);
+	}
 
 	// validate the public members
 	mPublic = typeof mPublic === 'object' ? mPublic : {};

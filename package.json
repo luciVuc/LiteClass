@@ -1,6 +1,6 @@
 {
   "name": "liteclass",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "JS module that aims to facilitate object-oriented programming (OOP) in JavaScript by simplifying the process of creating and extending classes through prototypal inheritance.",
   "main": "src/class.js",
   "private": false,
@@ -22,7 +22,7 @@
     "inheritance",
     "extend"
   ],
-  "author": "Lucian Vuc <lucian.vuc@gmail.com>",
+  "author": "Lucian Vuc (https://github.com/luciVuc)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lucivuc/LiteClass/issues"
@@ -31,7 +31,7 @@
     "events": "^1.1.1"
   },
   "devDependencies": {
-    "browserify": "^13.1.1",
+    "browserify": "^14.1.0",
     "qunitjs": "^2.0.1"
   }
 }
